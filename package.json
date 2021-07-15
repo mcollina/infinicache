@@ -1,0 +1,31 @@
+{
+  "name": "infinicache",
+  "version": "0.0.1",
+  "description": "A LRU cache built on WeakRefs and FinalizationRegistry",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard | snazzy && tap test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcollina/infinicache.git"
+  },
+  "keywords": [
+    "cache",
+    "lru",
+    "weak",
+    "ref",
+    "weakref"
+  ],
+  "author": "Matteo Collina <hello@matteocollina.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcollina/infinicache/issues"
+  },
+  "homepage": "https://github.com/mcollina/infinicache#readme",
+  "devDependencies": {
+    "snazzy": "^9.0.0",
+    "standard": "^16.0.3",
+    "tap": "^15.0.9"
+  }
+}
