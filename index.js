@@ -2,36 +2,36 @@
 
 class Cache {
   constructor (opts = {}) {
-    this._map = new Map()
+    this._map = {}
     this._registry = new FinalizationRegistry((key) => {
-      this._map.delete(key)
+      delete this._map[key]
     })
     this._ttl = opts.ttl || 0
   }
 
   set (key, value) {
     const entry = new Entry(key, value, this._ttl)
-    this._map.set(key, entry)
-    this._registry.register(value, key, entry)
+    this._map[key] = entry
+    this._registry.register(value, key)
     return this
   }
 
   get (key) {
-    const entry = this._map.get(key)
-    if (!entry) {
+    const entry = this._map[key]
+    if (entry === undefined) {
       return undefined
     }
 
     if (entry.isExpired(this._ttl)) {
-      this._map.delete(key)
-      this._registry.unregister(entry)
+      delete this._map[key]
+      this._registry.unregister(entry.deref())
       return undefined
     }
 
-    const value = entry.ref.deref()
+    const value = entry.deref()
 
     if (value === undefined) {
-      this._map.delete(key)
+      delete this._map[key]
       return undefined
     }
 
@@ -53,11 +53,12 @@ function _clearSecond () {
   _currentSecond = undefined
 }
 
-class Entry {
-  constructor (key, value) {
+class Entry extends WeakRef {
+  constructor (key, value, ttl) {
+    super(value)
+
     this.key = key
-    this.ref = new WeakRef(value)
-    this.savedAt = currentSecond()
+    this.savedAt = ttl ? currentSecond() : 0
   }
 
   isExpired (ttl) {
