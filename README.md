@@ -17,7 +17,9 @@ import { promisify } from 'util'
 
 const immediate = promisify(setImmediate)
 
-const cache = new Cache()
+const cache = new Cache({
+  ttl: 5 // seconds
+})
 
 // Create a scope so that obj goes
 // out of scope
